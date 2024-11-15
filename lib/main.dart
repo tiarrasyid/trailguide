@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trailguide/HistoryPage.dart';
+import 'package:trailguide/StartPage.dart';
 
 void main() {
   runApp(const MountainApp());
@@ -49,73 +51,62 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top logo centered
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: Image.asset('assets/logo.png', height: 24),
               ),
             ),
-
-            // Main content with scroll
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Featured Mountain Card with Carousel
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 200,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            onPageChanged: (index) {
-                              setState(() {
-                                _currentPage = index;
-                              });
-                            },
-                            itemCount: carouselData.length,
-                            itemBuilder: (context, index) {
-                              return _buildFeaturedMountainCard(
-                                carouselData[index]['name']!,
-                                carouselData[index]['image']!,
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            carouselData.length,
-                            (index) => GestureDetector(
-                              onTap: () {
-                                _pageController.animateToPage(
-                                  index,
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeIn,
-                                );
-                              },
-                              child: Container(
-                                margin:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: _currentPage == index
-                                      ? const Color(0xFF508D7C)
-                                      : Colors.grey.shade300,
-                                ),
-                              ),
+                    SizedBox(
+                      height: 200,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentPage = index;
+                          });
+                        },
+                        itemCount: carouselData.length,
+                        itemBuilder: (context, index) {
+                          return _buildFeaturedMountainCard(
+                            carouselData[index]['name']!,
+                            carouselData[index]['image']!,
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        carouselData.length,
+                        (index) => GestureDetector(
+                          onTap: () {
+                            _pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeIn,
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 4),
+                            width: 8,
+                            height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: _currentPage == index
+                                  ? const Color(0xFF508D7C)
+                                  : Colors.grey.shade300,
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-
-                    // Recommendations Section
                     const Padding(
                       padding: EdgeInsets.all(16.0),
                       child: Text(
@@ -126,8 +117,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-
-                    // Mountain Grid
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: GridView.count(
@@ -148,7 +137,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-
                     // Preparation Section
                     Padding(
                       padding: const EdgeInsets.all(16.0),
@@ -182,8 +170,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-
-            // Bottom Navigation Bar
             Container(
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: const BoxDecoration(
@@ -193,9 +179,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _buildNavItem(Icons.home, 'Home', true),
-                  _buildNavItem(Icons.play_arrow, 'Start', false),
-                  _buildNavItem(Icons.history, 'History', false),
+                  _buildNavItem(Icons.home, 'Home', true, context),
+                  _buildNavItem(Icons.play_arrow, 'Start', false, context),
+                  _buildNavItem(Icons.history, 'History', false, context),
                 ],
               ),
             ),
@@ -241,9 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildMountainTile(String name, String imagePath) {
     return GestureDetector(
-      onTap: () {
-        // Handle navigation
-      },
+      onTap: () {},
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -288,13 +272,29 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isSelected) {
+  Widget _buildNavItem(
+      IconData icon, String label, bool isSelected, BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(
-          icon,
-          color: isSelected ? const Color(0xFF508D7C) : Colors.grey,
+        IconButton(
+          icon: Icon(
+            icon,
+            color: isSelected ? const Color(0xFF508D7C) : Colors.grey,
+          ),
+          onPressed: () {
+            if (label == 'History') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HistoryPage()),
+              );
+            } else if (label == 'Start') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StartPage()),
+              );
+            }
+          },
         ),
         Text(
           label,

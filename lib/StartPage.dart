@@ -6,8 +6,12 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Start Page')),
-      body: Center(child: const Text('This is the Start Page')),
+      appBar: AppBar(
+        title: const Text('Start Page'),
+      ),
+      body: const Center(
+        child: Text('This is the Start Page'),
+      ),
     );
   }
 }
