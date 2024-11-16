@@ -47,5 +47,9 @@
 		<true/>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app needs access to photo library to upload BPJS card</string>
+		<key>NSCameraUsageDescription</key>
+		<string>This app needs camera access to capture BPJS card photo</string>
 	</dict>
 </plist>
