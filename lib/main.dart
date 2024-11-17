@@ -79,7 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildNavItem(IconData icon, String label, bool isSelected, int index) {
+  Widget _buildNavItem(
+      IconData icon, String label, bool isSelected, int index) {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Column(
@@ -105,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class HomeContent extends StatefulWidget {
   final BuildContext parentContext;
-  
+
   const HomeContent({Key? key, required this.parentContext}) : super(key: key);
 
   @override
@@ -132,10 +133,10 @@ class _HomeContentState extends State<HomeContent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Image.asset('assets/logo.png', height: 24),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Image.asset('assets/logo.png', height: 48),
           ),
         ),
         SizedBox(
