@@ -1,6 +1,6 @@
-// prediction_page.dart
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:trailguide/main.dart';
 
 class PredictionPage extends StatelessWidget {
   final Map<String, dynamic> formData;
@@ -26,22 +26,65 @@ class PredictionPage extends StatelessWidget {
       ),
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildHeader(), // Tidak scrollable
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildHeader(),
-                    _buildHikingStatsCard(),
-                    _buildEquipmentCard(),
-                    _buildWeatherCard(),
-                    const SizedBox(height: 24),
+                    _buildHikingStatsCard(), // Scrollable
+                    _buildEquipmentCard(), // Scrollable
                   ],
                 ),
               ),
             ),
-            _buildBottomNavigation(context),
+            Padding(
+              padding: const EdgeInsets.all(28.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the main.dart file
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                        (route) => false,
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF508D7C),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Back to Home ',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Icon(
+                          Icons.home,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -77,7 +120,7 @@ class PredictionPage extends StatelessWidget {
 
   Widget _buildHikingStatsCard() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 1.0),
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -158,7 +201,7 @@ class PredictionPage extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 28.0),
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -202,117 +245,6 @@ class PredictionPage extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildWeatherCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Weather Forecast',
-                style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildWeatherInfo('Morning', Icons.wb_sunny_outlined, '18°C'),
-                  _buildWeatherInfo('Afternoon', Icons.cloud, '22°C'),
-                  _buildWeatherInfo(
-                      'Evening', Icons.nights_stay_outlined, '15°C'),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildWeatherInfo(String time, IconData icon, String temp) {
-    return Column(
-      children: [
-        Text(
-          time,
-          style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 8),
-        Icon(icon, color: const Color(0xFF508D7C), size: 24),
-        const SizedBox(height: 8),
-        Text(
-          temp,
-          style: GoogleFonts.poppins(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildBottomNavigation(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            buildNavItem(Icons.home, 'Home', false, context),
-            buildNavItem(Icons.map, 'Start', true, context),
-            buildNavItem(Icons.history, 'History', false, context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildNavItem(
-      IconData icon, String label, bool isActive, BuildContext context) {
-    return InkWell(
-      onTap: () {
-        if (label == 'Start') {
-          Navigator.pop(context);
-        }
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? const Color(0xFF508D7C) : Colors.grey,
-            size: 24,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: GoogleFonts.poppins(
-              fontSize: 12,
-              color: isActive ? const Color(0xFF508D7C) : Colors.grey,
-            ),
-          ),
-        ],
       ),
     );
   }

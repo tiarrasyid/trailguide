@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:trailguide/HistoryPage.dart';
 import 'package:trailguide/StartPage.dart';
+import 'package:trailguide/hnm.dart';
+import 'package:trailguide/tnm.dart';
+import 'package:trailguide/reg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
@@ -71,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavItem(Icons.home, 'Home', _selectedIndex == 0, 0),
-            _buildNavItem(Icons.play_arrow, 'Start', _selectedIndex == 1, 1),
+            _buildNavItem(Icons.hiking, 'Start', _selectedIndex == 1, 1),
             _buildNavItem(Icons.history, 'History', _selectedIndex == 2, 2),
           ],
         ),
@@ -231,17 +234,44 @@ class _HomeContentState extends State<HomeContent> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      _buildPreparationCard(
-                        'health and mental',
-                        Icons.favorite,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HealthAndMentalPage()),
+                          );
+                        },
+                        child: _buildPreparationCard(
+                          'health and mental',
+                          Icons.favorite,
+                        ),
                       ),
-                      _buildPreparationCard(
-                        'tools and materials',
-                        Icons.home_repair_service,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ToolsAndMaterialPage()),
+                          );
+                        },
+                        child: _buildPreparationCard(
+                          'tools and materials',
+                          Icons.home_repair_service,
+                        ),
                       ),
-                      _buildPreparationCard(
-                        'regulation',
-                        Icons.gavel,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegulationPage()),
+                          );
+                        },
+                        child: _buildPreparationCard(
+                          'regulation',
+                          Icons.gavel,
+                        ),
                       ),
                     ],
                   ),
