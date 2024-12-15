@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "103015596170",
+    "project_id": "trailguide-4172e",
+    "storage_bucket": "trailguide-4172e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:103015596170:android:ebf0c18088c38f26f32d73",
+        "android_client_info": {
+          "package_name": "com.example.trailguide"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlOGTyah0Di9PlZHnhwFvMtkKum-0CBBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,111 +1,78 @@
-  import 'package:flutter/material.dart';
-  import 'package:google_fonts/google_fonts.dart';
-  import 'dart:io';
-  import 'package:image_picker/image_picker.dart';
-  import 'PredictionPage.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'PredictionPage.dart';
 
-  class StartPage extends StatefulWidget {
-    const StartPage({Key? key}) : super(key: key);
+class StartPage extends StatefulWidget {
+  const StartPage({Key? key}) : super(key: key);
 
-    @override
-    _StartPageState createState() => _StartPageState();
+  @override
+  _StartPageState createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _totalDistanceController = TextEditingController();
+  final _totalElevationGainController = TextEditingController();
+  final _averageSpeedController = TextEditingController();
+  final _averageGradientController = TextEditingController();
+
+  void _navigateToPredictionPage() {
+    // Gunakan validate() dan periksa hasilnya
+    if (_formKey.currentState!.validate()) {
+      // Buat map dari data form
+      final formData = {
+        'distance': _totalDistanceController.text,
+        'elevation': _totalElevationGainController.text,
+        'speed': _averageSpeedController.text,
+        'gradient': _averageGradientController.text,
+      };
+
+      // Navigasi ke halaman prediksi
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PredictionPage(formData: formData),
+        ),
+      );
+    }
   }
 
-  class _StartPageState extends State<StartPage> {
-    final _formKey = GlobalKey<FormState>();
-    final _mountainController = TextEditingController();
-    final _latitudeController = TextEditingController();
-    final _longitudeController = TextEditingController();
-    File? _bpjsImage;
-    final ImagePicker _picker = ImagePicker();
-    String? _imageError;
-
-    Future<void> _pickImage() async {
-      try {
-        final XFile? image = await _picker.pickImage(
-          source: ImageSource.gallery,
-          imageQuality: 70,
-        );
-
-        if (image != null) {
-          final File file = File(image.path);
-          final int fileSize = await file.length();
-
-          if (fileSize > 256 * 1024) {
-            setState(() {
-              _imageError = 'Image size must be less than 256kb';
-              _bpjsImage = null;
-            });
-            return;
-          }
-
-          setState(() {
-            _bpjsImage = file;
-            _imageError = null;
-          });
-        }
-      } catch (e) {
-        print('Error picking image: $e');
-        setState(() {
-          _imageError = 'Error picking image. Please try again.';
-        });
-      }
-    }
-
-    void _clearImage() {
-      setState(() {
-        _bpjsImage = null;
-        _imageError = null;
-      });
-    }
-
-    void _navigateToPredictionPage() {
-      if (_formKey.currentState!.validate() && _bpjsImage != null) {
-        // Create a map of the form data
-        final formData = {
-          'mountain': _mountainController.text,
-          'latitude': _latitudeController.text,
-          'longitude': _longitudeController.text,
-          'bpjsImage': _bpjsImage!.path,
-        };
-
-        // Navigate to PredictionPage with the form data
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PredictionPage(formData: formData),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFFE8F1EF),
+      body: Column(
+        children: [
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24.0),
+              child: Image.asset('assets/logo.png', height: 48),
+            ),
           ),
-        );
-      } else if (_bpjsImage == null) {
-        setState(() {
-          _imageError = 'Please upload your BPJS card';
-        });
-      }
-    }
-
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        backgroundColor: const Color(0xFFE8F1EF),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24.0),
-                  child: Image.asset('assets/logo.png', height: 48),
-                ),
+          Container(
+            width: 332,
+            height: 150,
+            margin: const EdgeInsets.symmetric(vertical: 0.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: const DecorationImage(
+                image: AssetImage('assets/mount.png'),
+                fit: BoxFit.cover,
               ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(26.0),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Enter name of the mountain*',
+                        'Input total distance*',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -113,9 +80,9 @@
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: _mountainController,
+                        controller: _totalDistanceController,
                         decoration: InputDecoration(
-                          hintText: 'ex. Mt. Lawu',
+                          hintText: 'Total distance',
                           hintStyle: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 14,
@@ -131,16 +98,17 @@
                             vertical: 12,
                           ),
                         ),
+                        keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter the mountain name';
+                            return 'Please enter total distance';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 20),
                       Text(
-                        'Enter your starting point coordinates*',
+                        'Input total elevation gain*',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
@@ -148,10 +116,10 @@
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
-                        controller: _latitudeController,
+                        controller: _totalElevationGainController,
                         decoration: InputDecoration(
-                          labelText: 'Latitude',
-                          labelStyle: GoogleFonts.poppins(
+                          hintText: 'Total elevation gain',
+                          hintStyle: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 14,
                           ),
@@ -169,17 +137,25 @@
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter latitude';
+                            return 'Please enter total elevation gain';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Input average speed*',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       TextFormField(
-                        controller: _longitudeController,
+                        controller: _averageSpeedController,
                         decoration: InputDecoration(
-                          labelText: 'Longitude',
-                          labelStyle: GoogleFonts.poppins(
+                          hintText: 'Average speed',
+                          hintStyle: GoogleFonts.poppins(
                             color: Colors.grey,
                             fontSize: 14,
                           ),
@@ -197,111 +173,46 @@
                         keyboardType: TextInputType.number,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter longitude';
+                            return 'Please enter average speed';
                           }
                           return null;
                         },
                       ),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 20),
                       Text(
-                        'Upload your BPJS card*',
+                        'Input average gradient*',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      Container(
-                        width: double.infinity,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
+                      TextFormField(
+                        controller: _averageGradientController,
+                        decoration: InputDecoration(
+                          hintText: 'Average gradient',
+                          hintStyle: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
                         ),
-                        child: _bpjsImage == null
-                            ? Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Icon(
-                                    Icons.image_outlined,
-                                    size: 48,
-                                    color: Colors.grey,
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'please upload image size less than 256kb\nformat file(.jpg, .png, .pdf)',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 12,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  if (_imageError != null)
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        _imageError!,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 12,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  const SizedBox(height: 16),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: _pickImage,
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFF508D7C),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'Choose File',
-                                          style: GoogleFonts.poppins(
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 12),
-                                      TextButton(
-                                        onPressed: _clearImage,
-                                        child: Text(
-                                          'Clear',
-                                          style: GoogleFonts.poppins(
-                                            color: const Color(0xFF508D7C),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                            : Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Image.file(
-                                    _bpjsImage!,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  Positioned(
-                                    top: 8,
-                                    right: 8,
-                                    child: IconButton(
-                                      onPressed: _clearImage,
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                        keyboardType: TextInputType.number,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter average gradient';
+                          }
+                          return null;
+                        },
                       ),
                       const SizedBox(height: 32),
                       Align(
@@ -343,17 +254,19 @@
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
-      );
-    }
-
-    @override
-    void dispose() {
-      _mountainController.dispose();
-      _latitudeController.dispose();
-      _longitudeController.dispose();
-      super.dispose();
-    }
+        ],
+      ),
+    );
   }
+
+  @override
+  void dispose() {
+    _totalDistanceController.dispose();
+    _totalElevationGainController.dispose();
+    _averageSpeedController.dispose();
+    _averageGradientController.dispose();
+    super.dispose();
+  }
+}
